@@ -1,16 +1,23 @@
+# =============================================================================
+# dbt_project.yml — rtl_rdp (Retail Data Platform)
+# =============================================================================
+# This file is the central configuration for the rtl_rdp dbt project.
+# It defines project metadata, file paths, and model layer configurations.
+# Environment-specific dataset names are resolved at runtime via the
+# generate_schema_name macro, which prepends the target name (dev/tst/prd).
+# =============================================================================
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
 name: 'rtl_rdp'
 version: '1.0.0'
 
-# This setting configures which "profile" dbt uses for this project.
+# Profile name must match the entry in ~/.dbt/profiles.yml
 profile: 'rtl_rdp'
 
-# These configurations specify where dbt should look for different types of files.
-# The `model-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
+# =============================================================================
+# File Path Configuration
+# Defines where dbt looks for each type of file in the project.
+# These follow dbt conventions and should not need to change.
+# =============================================================================
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -18,19 +25,78 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
-clean-targets:         # directories to be removed by `dbt clean`
-  - "target"
-  - "dbt_packages"
+# Directories removed when running dbt clean
+clean-targets:
+  - "target"       # compiled SQL and run artifacts
+  - "dbt_packages" # installed dbt packages
 
+# =============================================================================
+# Model Layer Configuration
+# Each layer maps to a BigQuery dataset and materialization strategy.
+# Dataset names are prefixed with the environment at runtime:
+#   dev_rdp_temp, tst_rdp_temp, prd_rdp_temp etc.
+# Owner indicates who is responsible for maintaining each layer.
+#
+# Layer dependency chain (top to bottom — each layer reads from the one above):
+#   [rdp_staging — external, owned by rtl_staging project]
+#   → temp → dwh → dwh_views → mart → mart_views
+#
+# Access rules:
+#   - rtl_rdp reads rdp_staging via source() declarations only
+#   - Customers query rdp_dwh_views and rdp_mart_views only
+#   - Lightdash points at rdp_mart_views only
+#   - rdp_dwh physical tables are never exposed directly
+# =============================================================================
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# In this example config, we tell dbt to build all models in the example/
-# directory as views. These settings can be overridden in the individual model
-# files using the `{{ config(...) }}` macro.
 models:
   rtl_rdp:
-    # Config indicated by + and applies to all files under models/example/
-    example:
+
+    temp:
+      # PURPOSE: Internal working tables for enrichment, joining and
+      # preparing data for the warehouse layer. Supports any downstream
+      # layer. Never exposed to customers or BI tools.
+      # OWNER: RDP Product Team
+      # DATASET: {env}_rdp_temp
+      # READS FROM: rdp_staging (external source)
+      +materialized: table
+      +schema: rdp_temp
+
+    dwh:
+      # PURPOSE: Core conformed data warehouse layer containing physical
+      # dimension and fact tables. Never exposed directly to customers.
+      # All customer and mart access goes through dwh_views layer.
+      # OWNER: RDP Product Team
+      # DATASET: {env}_rdp_dwh
+      # READS FROM: rdp_temp
+      +materialized: table
+      +schema: rdp_dwh
+
+    dwh_views:
+      # PURPOSE: Stable public-facing views over physical warehouse tables.
+      # Absorbs breaking schema changes so customer queries are unaffected.
+      # Marts and customers reference these views, never rdp_dwh directly.
+      # OWNER: RDP Product Team
+      # DATASET: {env}_rdp_dwh_views
+      # READS FROM: rdp_dwh
       +materialized: view
+      +schema: rdp_dwh_views
+
+    mart:
+      # PURPOSE: Subject-area aggregated tables optimized for reporting.
+      # Built on top of dwh_views, never physical warehouse tables.
+      # One mart folder per business domain (orders, customers, products etc.)
+      # OWNER: RDP Product Team
+      # DATASET: {env}_rdp_mart
+      # READS FROM: rdp_dwh_views
+      +materialized: table
+      +schema: rdp_mart
+
+    mart_views:
+      # PURPOSE: BI-facing views exposed to Lightdash. May join across
+      # mart and dwh_views layers. The only layer visible to end
+      # users via Lightdash. Never exposes physical tables directly.
+      # OWNER: RDP Product Team
+      # DATASET: {env}_rdp_mart_views
+      # READS FROM: rdp_mart, rdp_dwh_views
+      +materialized: view
+      +schema: rdp_mart_views

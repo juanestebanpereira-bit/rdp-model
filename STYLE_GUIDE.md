@@ -94,6 +94,14 @@ status
 cancel_date
 ```
 
+#### Names vs Descriptions
+- Use `_name` for labels, identifiers and short categorical values.
+  `department_name`, `class_name`, `item_name`
+- Use `_description` only for long free-text fields that genuinely
+  describe something in detail rather than label it.
+  `product_description`, `promotion_description`
+- When in doubt, prefer `_name` — it is more natural and concise.
+
 ### 3.4 Boolean Columns
 - Always prefixed with `is_` or `has_`
 - Never use flag suffixes or ambiguous names
@@ -188,6 +196,48 @@ Within any model, columns should be ordered as follows:
 6. Dates
 7. Timestamps
 8. Customer columns (cust_*)
+
+#### Denormalized Tables
+In warehouse tables where parent attributes are carried down through
+the hierarchy, the ordering within each grouping follows the hierarchy
+from most specific to least specific (bottom up):
+
+1. Primary key of the entity
+2. Foreign keys in hierarchy order — immediate parent first,
+   then grandparent, then great-grandparent etc.
+3. Attributes of the entity itself
+4. Attributes of the immediate parent
+5. Attributes of the grandparent
+6. And so on up the hierarchy
+7. Remaining column types follow the standard order
+   (booleans, dates, timestamps, cust_*)
+
+Example — dim_items:
+```sql
+-- 1. primary key
+item_id,
+
+-- 2. foreign keys — immediate parent first
+style_id,
+class_id,
+department_id,
+
+-- 3. item attributes
+item_number,
+item_name,
+
+-- 4. style attributes
+style_number,
+style_name,
+
+-- 5. class attributes
+class_number,
+class_name,
+
+-- 6. department attributes
+department_number,
+department_name
+```
 
 ---
 

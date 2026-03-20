@@ -120,25 +120,47 @@ order_date          -- DATE, used for calendar joins
 order_placed_at     -- TIMESTAMP, used for intraday analysis
 ship_date           -- DATE
 cancel_date         -- DATE
-created_at          -- TIMESTAMP
-updated_at          -- TIMESTAMP
+order_created_at    -- TIMESTAMP
+order_updated_at    -- TIMESTAMP
 ```
 
 ### 3.6 Monetary Columns
-- Monetary amounts use the suffix `_amount`
-- All monetary amounts in the same row are in the same currency
-- Each table containing monetary amounts has exactly one `currency_code` column
-- `currency_code` follows the ISO 4217 standard (e.g. BRL, USD, EUR, GBP)
-- Currency conversion is out of scope — amounts are stored in local currency only
-```
-currency_code           -- STRING, ISO 4217, row-level, applies to all amounts
-price_amount            -- NUMERIC, in currency_code
-freight_amount          -- NUMERIC, in currency_code
-discount_amount         -- NUMERIC, in currency_code
-```
+
+- All monetary amounts in a row are in the same currency.
+- Each table containing monetary amounts has exactly one `currency_code`
+  column per row following ISO 4217 (e.g. BRL, USD, EUR, GBP).
+- Currency conversion is out of scope — amounts are stored in local
+  currency only.
 
 **Assumption:** All monetary amounts in a row are in the same currency.
 Rows with mixed currencies are not supported by this design.
+
+Monetary columns use the following suffixes reflecting
+their valuation type, which is standard terminology in retail:
+
+| Suffix | Meaning | Example |
+|---|---|---|
+| `_retail` | Value at selling/retail price | `sales_retail`, `inventory_retail` |
+| `_cost` | Value at cost price | `sales_cost`, `inventory_cost` |
+
+For monetary columns outside the retail/cost valuation pattern,
+use the generic `_amount` suffix:
+
+| Suffix | Meaning | Example |
+|---|---|---|
+| `_amount` | Generic monetary amount | `freight_amount`, `discount_amount` |
+```sql
+-- retail valuation columns
+sales_retail            -- NUMERIC, sales value at retail price
+sales_cost              -- NUMERIC, sales value at cost price
+inventory_retail        -- NUMERIC, inventory value at retail price
+inventory_cost          -- NUMERIC, inventory value at cost price
+
+-- generic monetary columns
+freight_amount          -- NUMERIC, freight charge
+discount_amount         -- NUMERIC, discount applied
+currency_code           -- STRING, ISO 4217, applies to all amounts in row
+```
 
 
 ### 3.7 Customer-Added Columns
@@ -208,7 +230,7 @@ where o.customer_id = c.customer_id
 SELECT
     source_item_code        AS product_id,
     source_category         AS product_category_name,
-    length * width * height AS product_volume_cm3,
+    length * width * height AS product_volume,
 
 -- incorrect — relies on implicit column naming
 SELECT

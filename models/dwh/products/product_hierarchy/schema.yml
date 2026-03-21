@@ -25,23 +25,6 @@ models:
       Used to analyze and report merchandise performance at the
       highest level of the product classification structure.
 
-  - name: dim_classes
-    description: >
-      A class is a grouping of styles within a department.
-      Used to analyze and report merchandise performance at the
-      class level across all styles and items within it.
-
-  - name: dim_styles
-    description: >
-      A style is a grouping of items within a class.
-      Used to analyze and report merchandise performance at the
-      style level across all items within it.
-
-  - name: dim_items
-    description: >
-      An item is the lowest level of the product hierarchy and the
-      primary unit of merchandise. All transactional data such as
-      sales, inventory and orders is recorded at the item level.
     columns:
       - name: department_id
         description: "{{ doc('department_id') }}"
@@ -64,9 +47,9 @@ models:
   # ---------------------------------------------------------------------------
   - name: dim_classes
     description: >
-      Class dimension. Second level of the product hierarchy.
-      One row per class. Contains class attributes and denormalized
-      department attributes from the level above.
+      A class is a grouping of styles within a department.
+      Used to analyze and report merchandise performance at the
+      class level across all styles and items within it.
     columns:
       - name: class_id
         description: "{{ doc('class_id') }}"
@@ -104,9 +87,9 @@ models:
   # ---------------------------------------------------------------------------
   - name: dim_styles
     description: >
-      Style dimension. Third level of the product hierarchy.
-      One row per style. Contains style attributes and denormalized
-      class and department attributes from levels above.
+      A style is a grouping of items within a class.
+      Used to analyze and report merchandise performance at the
+      style level across all items within it.
     columns:
       - name: style_id
         description: "{{ doc('style_id') }}"
@@ -159,10 +142,9 @@ models:
   # ---------------------------------------------------------------------------
   - name: dim_items
     description: >
-      Item dimension. Lowest level of the product hierarchy.
-      One row per item. Contains item attributes and denormalized
-      style, class and department attributes from all levels above.
-      This is the primary product dimension used in fact tables.
+      An item is the lowest level of the product hierarchy and the
+      primary unit of merchandise. All transactional data such as
+      sales, inventory and orders is recorded at the item level.
     columns:
       - name: item_id
         description: "{{ doc('item_id') }}"

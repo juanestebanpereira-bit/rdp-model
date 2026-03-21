@@ -15,15 +15,9 @@
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
     {%- if custom_schema_name is none -%}
-        -- No schema override defined — use target dataset as-is.
-        -- This should only apply to the default dataset (dev_rdp_client).
         {{ target.schema }}
-
     {%- else -%}
-        -- Prepend environment prefix from target name to custom schema name.
-        -- target.name is set in profiles.yml (dev, tst, or prd).
-        {{ target.name }}_{{ custom_schema_name | trim }}
-
+         {{ target.name }}_{{ custom_schema_name | trim }}
     {%- endif -%}
 
 {%- endmacro %}

@@ -15,9 +15,9 @@
 {% macro generate_schema_name(custom_schema_name, node) -%}
 
     {%- if custom_schema_name is none -%}
-        {{ target.schema }}
+        {{ target.name }}_{{ target.schema }}
     {%- else -%}
-         {{ target.name }}_{{ custom_schema_name | trim }}
+        {{ target.name }}_{{ custom_schema_name | trim }}
     {%- endif -%}
 
 {%- endmacro %}

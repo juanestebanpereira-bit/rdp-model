@@ -1,0 +1,29 @@
+# =============================================================================
+# sources.yml — sources/products/product_hierarchy
+# =============================================================================
+# Declares the staging views consumed by the Product Hierarchy component.
+# These views are defined and maintained in rtl_rdp_client and must
+# satisfy the RDP staging contract defined in contract/products.md.
+#
+# Subject Area: Products
+# Component:    Product Hierarchy
+# Owner:        RDP Product Team
+# Reads from:   dev_rdp_staging (maintained by rtl_rdp_client)
+# =============================================================================
+
+version: 2
+
+sources:
+  - name: rdp_staging
+    description: "Customer-controlled staging layer."
+    database: crested-sentry-489814-b6
+    schema: dev_rdp_staging
+    tables:
+      - name: stg_departments
+        description: "Staged department data satisfying RDP contract."
+      - name: stg_classes
+        description: "Staged class data satisfying RDP contract."
+      - name: stg_styles
+        description: "Staged style data satisfying RDP contract."
+      - name: stg_items
+        description: "Staged item data satisfying RDP contract."

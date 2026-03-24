@@ -63,6 +63,35 @@ customer_id
 order_id
 seller_id
 ```
+#### Composite Primary Keys
+When a table receives data from multiple source systems, the primary
+key becomes a composite of rdp_source_system and the natural key:
+
+| Single source | Multi source |
+|---|---|
+| `order_id` | `rdp_source_system + order_id` |
+| `product_id` | `rdp_source_system + product_id` |
+
+In dbt, composite keys are tested using:
+```yaml
+tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+        - rdp_source_system
+        - order_id
+```
+
+#### Surrogate Keys
+Surrogate keys (_sk suffix) are not used by default in RDP.
+Natural keys (_id suffix) serve as primary keys in all dimension tables.
+
+Surrogate keys could be introduced when:
+- Multiple source systems load data into the same dimension table
+- Slowly changing dimension (SCD Type 2) support is required
+- Source system natural keys are demonstrably unstable
+
+All dimension tables include a source_system column to support
+future multi-source scenarios without requiring surrogate keys.
 
 ### 3.2 Foreign Keys
 - Same name as the primary key they reference
@@ -198,6 +227,26 @@ set to `NOT_ASSIGNED` and all descriptive attributes set to `UNKNOWN`
 to maintain referential integrity. `NOT_AVAILABLE` is applied at the staging layer when a required
 column has no source mapping to avoide nulls in reports.
 
+### 3.9 System Columns
+
+The following columns are reserved by RDP and added automatically
+to all dimension and fact tables via the `audit_columns()` macro.
+Customers must not use these names in custom columns.
+
+| Column | Type | Nullable | Purpose |
+|---|---|---|---|
+| `rdp_source_system` | STRING | NOT NULL | Identifies the source system that provided the record |
+| `rdp_created_at` | TIMESTAMP | NOT NULL | When the record was first loaded into the warehouse |
+| `rdp_updated_at` | TIMESTAMP | NOT NULL | When the record was last updated in the warehouse |
+
+These columns appear last in every table, after all business columns
+and before customer columns (cust_*). 
+
+**Note:** In full-refresh table materializations, `created_at` and
+`updated_at` reflect the time of the last dbt run, not the original
+record creation time. Incremental models are required for true
+record-level audit timestamps.
+
 ---
 
 ## 4. Column Ordering
@@ -211,7 +260,8 @@ Within any model, columns should be ordered as follows:
 5. Boolean flags
 6. Dates
 7. Timestamps
-8. Customer columns (cust_*)
+8. System columns (rdp_source_system, rdp_created_at, rdp_updated_at)
+9. Customer columns (cust_*)
 
 #### Denormalized Tables
 In warehouse tables where parent attributes are carried down through

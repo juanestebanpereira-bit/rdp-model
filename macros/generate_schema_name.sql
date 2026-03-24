@@ -18,6 +18,7 @@
         {{ target.name }}_{{ target.schema }}
     {%- else -%}
         {{ target.name }}_{{ custom_schema_name | trim }}
+        
     {%- endif -%}
 
 {%- endmacro %}

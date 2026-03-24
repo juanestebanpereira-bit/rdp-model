@@ -182,6 +182,22 @@ cust_product_supplier_name
 cust_is_featured
 ```
 
+### 3.8 Sentinel Values
+
+Three sentinel values are used for missing data:
+
+| Value | Used For | Example |
+|---|---|---|
+| `NOT_ASSIGNED` | Foreign key columns where the parent entity is unknown | `class_id = 'NOT_ASSIGNED'` |
+| `UNKNOWN` | Descriptive attribute columns where the value is unknown | `style_name = 'UNKNOWN'` |
+| `NOT_AVAILABLE` | Columns not captured by the customer's source system | `style_name = 'NOT_AVAILABLE'` |
+
+
+Each dimension table contains one sentinel row with all foreign keys
+set to `NOT_ASSIGNED` and all descriptive attributes set to `UNKNOWN`
+to maintain referential integrity. `NOT_AVAILABLE` is applied at the staging layer when a required
+column has no source mapping to avoide nulls in reports.
+
 ---
 
 ## 4. Column Ordering

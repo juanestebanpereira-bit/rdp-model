@@ -23,7 +23,28 @@ sources:
         description: "Staged department data satisfying RDP contract."
       - name: stg_classes
         description: "Staged class data satisfying RDP contract."
+        columns:
+          - name: department_id
+            tests:
+              - relationships:
+                  to: source('rdp_staging', 'stg_departments')
+                  field: department_id
+                  severity: warn
       - name: stg_styles
         description: "Staged style data satisfying RDP contract."
+        columns:
+          - name: class_id
+            tests:
+              - relationships:
+                  to: source('rdp_staging', 'stg_classes')
+                  field: class_id
+                  severity: warn
       - name: stg_items
         description: "Staged item data satisfying RDP contract."
+        columns:
+          - name: style_id
+            tests:
+              - relationships:
+                  to: source('rdp_staging', 'stg_styles')
+                  field: style_id
+                  severity: warn

@@ -25,6 +25,7 @@ product-related subject areas (Sales, Inventory etc.)
 | `department_id` | STRING | NOT NULL |
 | `department_number` | STRING | NOT NULL |
 | `department_name` | STRING | NOT NULL |
+| `rdp_source_system` | STRING | NOT NULL |
 ```sql
 -- Minimum valid implementation
 SELECT
@@ -44,6 +45,7 @@ FROM {{ source('your_landing', 'your_departments_table') }}
 | `department_id` | STRING | NOT NULL |
 | `class_number` | STRING | NOT NULL |
 | `class_name` | STRING | NOT NULL |
+| `rdp_source_system` | STRING | NOT NULL |
 ```sql
 -- Minimum valid implementation
 SELECT
@@ -64,6 +66,7 @@ FROM {{ source('your_landing', 'your_classes_table') }}
 | `class_id` | STRING | NOT NULL |
 | `style_number` | STRING | NOT NULL |
 | `style_name` | STRING | NOT NULL |
+| `rdp_source_system` | STRING | NOT NULL |
 ```sql
 -- Minimum valid implementation
 SELECT
@@ -84,6 +87,7 @@ FROM {{ source('your_landing', 'your_styles_table') }}
 | `style_id` | STRING | NOT NULL |
 | `item_number` | STRING | NOT NULL |
 | `item_name` | STRING | NOT NULL |
+| `rdp_source_system` | STRING | NOT NULL |
 ```sql
 -- Minimum valid implementation
 SELECT

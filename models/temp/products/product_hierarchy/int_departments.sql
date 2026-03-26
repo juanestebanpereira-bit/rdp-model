@@ -3,15 +3,17 @@
 -- =============================================================================
 -- Intermediate department model. Reads from stg_departments and adds
 -- audit columns. Customer columns from stg_departments pass through
--- automatically via SELECT * EXCEPT.
+-- dynamically via customer_columns macro.
 --
 -- Component:  Product Hierarchy
 -- Owner:      RDP Product Team
 -- Reads from: rdp_staging.stg_departments
 -- =============================================================================
 
+{% set contract = ['department_id', 'department_number', 'department_name', 'rdp_source_system'] %}
+
 WITH source AS (
-    SELECT *, NULL as department_dummy FROM {{ source('rdp_staging', 'stg_departments') }}
+    SELECT * FROM {{ source('rdp_staging', 'stg_departments') }}
 )
 
 SELECT
@@ -23,14 +25,24 @@ SELECT
     department_name,
 
     -- customer columns passthrough
-    * EXCEPT (
-        department_id,
-        department_number,
-        department_name,
-        rdp_source_system
-    ),
+    {% if has_customer_columns(source('rdp_staging', 'stg_departments'), contract) %}
+        {{ customer_columns(source('rdp_staging', 'stg_departments'), contract) }},
+    {% endif %}
 
     -- system columns
     rdp_source_system
 
 FROM source
+
+UNION ALL
+
+SELECT
+    'NOT_ASSIGNED'  AS department_id,
+    'NOT_ASSIGNED'  AS department_number,
+    'Not Assigned'  AS department_name,
+
+    {% if has_customer_columns(source('rdp_staging', 'stg_departments'), contract) %}
+        {{ sentinel_customer_columns(source('rdp_staging', 'stg_departments'), contract) }},
+    {% endif %}
+
+    'NOT_ASSIGNED'  AS rdp_source_system

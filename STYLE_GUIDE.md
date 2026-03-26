@@ -239,7 +239,7 @@ Customers must not use these names in custom columns.
 | `rdp_updated_at` | TIMESTAMP | NOT NULL | When the record was last updated in the warehouse |
 
 These columns appear last in every table, after all business columns
-and before customer columns (cust_*). 
+and customer columns (cust_*).
 
 **Note:** `rdp_source_system` is provided by the customer in the staging layer
 and flows through `int_` models to `dim_` and `fct_` tables automatically.
@@ -262,8 +262,8 @@ Within any model, columns should be ordered as follows:
 5. Boolean flags
 6. Dates (non-PK only)
 7. Timestamps (non-PK only)
-8. System columns (rdp_source_system, rdp_created_at, rdp_updated_at)
-9. Customer columns (cust_*)
+8. Customer columns (cust_*)
+9. System columns (rdp_source_system, rdp_created_at, rdp_updated_at)
 
 **Note:** When a date or timestamp forms part of a composite primary key,
 it appears in position 1 alongside the other primary key columns,
@@ -294,12 +294,12 @@ total_amount,
 ship_date,
 return_date,
 
--- 8. system columns
-rdp_created_at,
-rdp_updated_at,
+-- 8. customer columns
+cust_region_tag,
 
--- 9. customer columns
-cust_region_tag
+-- 9. system columns
+rdp_created_at,
+rdp_updated_at
 ```
 
 #### Denormalized Tables

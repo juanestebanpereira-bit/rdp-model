@@ -2,14 +2,16 @@
 -- int_classes.sql
 -- =============================================================================
 -- Intermediate class model. Reads from stg_classes, joins int_departments to
--- carry down department attributes. Customer columns from both sources pass
--- through automatically via SELECT * EXCEPT.
+-- carry down department attributes. Customer columns from stg_classes pass
+-- through dynamically via customer_columns macro.
 --
 -- Component:  Product Hierarchy
 -- Owner:      RDP Product Team
 -- Reads from: rdp_staging.stg_classes
 -- Joins:      int_departments (department_id)
 -- =============================================================================
+
+{% set contract = ['class_id', 'department_id', 'class_number', 'class_name', 'department_number', 'department_name', 'rdp_source_system'] %}
 
 WITH source AS (
     SELECT * FROM {{ source('rdp_staging', 'stg_classes') }}
@@ -34,22 +36,10 @@ SELECT
     COALESCE(departments.department_number, 'NOT_ASSIGNED')  AS department_number,
     COALESCE(departments.department_name,   'NOT ASSIGNED')  AS department_name,
 
-    -- customer columns passthrough from stg_classes
-    source.* EXCEPT (
-        class_id,
-        department_id,
-        class_number,
-        class_name,
-        rdp_source_system
-    ),
-
-    -- customer columns passthrough from int_departments
-    departments.* EXCEPT (
-        department_id,
-        department_number,
-        department_name,
-        rdp_source_system
-    ),
+    -- customer columns passthrough
+    {% if has_customer_columns(source('rdp_staging', 'stg_classes'), contract) %}
+        {{ customer_columns(source('rdp_staging', 'stg_classes'), contract) }},
+    {% endif %}
 
     -- system columns
     source.rdp_source_system
@@ -57,3 +47,19 @@ SELECT
 FROM source
 LEFT JOIN departments
     ON source.department_id = departments.department_id
+
+UNION ALL
+
+SELECT
+    'NOT_ASSIGNED'  AS class_id,
+    'NOT_ASSIGNED'  AS department_id,
+    'NOT_ASSIGNED'  AS class_number,
+    'Not Assigned'  AS class_name,
+    'NOT_ASSIGNED'  AS department_number,
+    'Not Assigned'  AS department_name,
+
+    {% if has_customer_columns(source('rdp_staging', 'stg_classes'), contract) %}
+        {{ sentinel_customer_columns(source('rdp_staging', 'stg_classes'), contract) }},
+    {% endif %}
+
+    'NOT_ASSIGNED'  AS rdp_source_system

@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Generates standard RDP audit columns for all dimension and fact tables.
 -- Call at the end of every dim_ and fct_ SELECT statement, after all
--- business columns and before customer columns (cust_*).
+-- business columns and customer columns (cust_*).
 --
 -- rdp_source_system is NOT generated here — it is provided by the customer
 -- in the staging layer and flows through via the int_ models.

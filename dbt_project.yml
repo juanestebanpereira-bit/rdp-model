@@ -24,7 +24,12 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-docs-paths: ["docs"]
+# Note: doc() block .md files are intentionally placed in models/ not docs/.
+# This is required for package distribution — dbt only copies the models/
+# folder when installing rtl_rdp as a package via dbt deps. Placing .md files
+# in docs/ would make them unavailable to downstream projects.
+# docs-paths is therefore set to models/ to match where the files actually live.
+docs-paths: ["models"]
 
 # Directories removed when running dbt clean
 clean-targets:

@@ -57,11 +57,29 @@ All model names are plural:
 - Always named `{entity}_id`
 - Never just `id` — too ambiguous in joined models
 - Must be unique and not null
+- **Must declare an explicit `constraints` entry in schema.yml — never rely on tests alone to communicate the PK relationship**
 ```
 product_id
 customer_id
 order_id
 seller_id
+```
+```yaml
+# correct — constraint declared explicitly
+models:
+  - name: stg_products
+    constraints:
+      - type: primary_key
+        columns: [product_id]
+    columns:
+      - name: product_id
+
+# incorrect — PK only implied by tests
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
 ```
 #### Composite Primary Keys
 When a table receives data from multiple source systems, the primary
@@ -96,12 +114,31 @@ future multi-source scenarios without requiring surrogate keys.
 ### 3.2 Foreign Keys
 - Same name as the primary key they reference
 - Makes joins self-documenting
+- **Must declare an explicit `constraints` entry in schema.yml — never rely on `relationships` tests alone to communicate the FK relationship**
 ```sql
 -- fct_orders references dim_products
 -- both use product_id — no ambiguity
 SELECT *
 FROM fct_orders o
 JOIN dim_products p ON o.product_id = p.product_id
+```
+```yaml
+# correct — FK constraint declared explicitly
+models:
+  - name: fct_orders
+    columns:
+      - name: product_id
+        constraints:
+          - type: foreign_key
+            to: ref('dim_products')
+            to_columns: [product_id]
+
+# incorrect — FK only implied by a relationships test
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
 ```
 
 ### 3.3 Attribute Columns
@@ -404,6 +441,7 @@ SELECT
 - Every model must have a `schema.yml` entry with a description
 - Every column must have a description using `{{ doc() }}` blocks where available
 - Primary keys must have `not_null` and `unique` tests at minimum
+- PKs and FKs must have explicit `constraints:` declared in schema.yml — the relationship must never be inferred from tests alone. Tests validate data quality; constraints declare the semantic contract.
 
 ---
 

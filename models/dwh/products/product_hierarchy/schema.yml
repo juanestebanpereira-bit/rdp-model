@@ -24,6 +24,9 @@ models:
       A department is the broadest grouping in the product hierarchy.
       Used to analyze and report merchandise performance at the
       highest level of the product classification structure.
+    constraints:
+      - type: primary_key
+        columns: [department_id]
 
     columns:
       - name: department_id
@@ -50,6 +53,9 @@ models:
       A class is a grouping of styles within a department.
       Used to analyze and report merchandise performance at the
       class level across all styles and items within it.
+    constraints:
+      - type: primary_key
+        columns: [class_id]
     columns:
       - name: class_id
         description: "{{ doc('class_id') }}"
@@ -59,6 +65,10 @@ models:
 
       - name: department_id
         description: "{{ doc('department_id') }}"
+        constraints:
+          - type: foreign_key
+            to: ref('dim_departments')
+            to_columns: [department_id]
         tests:
           - not_null
 
@@ -90,6 +100,9 @@ models:
       A style is a grouping of items within a class.
       Used to analyze and report merchandise performance at the
       style level across all items within it.
+    constraints:
+      - type: primary_key
+        columns: [style_id]
     columns:
       - name: style_id
         description: "{{ doc('style_id') }}"
@@ -99,6 +112,10 @@ models:
 
       - name: class_id
         description: "{{ doc('class_id') }}"
+        constraints:
+          - type: foreign_key
+            to: ref('dim_classes')
+            to_columns: [class_id]
         tests:
           - not_null
 
@@ -145,6 +162,9 @@ models:
       An item is the lowest level of the product hierarchy and the
       primary unit of merchandise. All transactional data such as
       sales, inventory and orders is recorded at the item level.
+    constraints:
+      - type: primary_key
+        columns: [item_id]
     columns:
       - name: item_id
         description: "{{ doc('item_id') }}"
@@ -154,6 +174,10 @@ models:
 
       - name: style_id
         description: "{{ doc('style_id') }}"
+        constraints:
+          - type: foreign_key
+            to: ref('dim_styles')
+            to_columns: [style_id]
         tests:
           - not_null
 

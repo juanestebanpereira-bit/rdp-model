@@ -67,6 +67,71 @@ any violations at pipeline run time.
 
 ---
 
+## Documenting Customer Columns
+
+Any time you add a `cust_*` column to a staging model you must document it.
+Without documentation, the column will appear in the RDP data dictionary
+with no description.
+
+### Where to Add Descriptions
+
+Short descriptions belong directly in the component's `schema.yml`, inline
+with the column definition:
+
+```yaml
+# rtl_rdp_client/models/staging/products/product_hierarchy/schema.yml
+models:
+  - name: stg_departments
+    columns:
+      - name: cust_department_manager
+        description: "Name of the manager responsible for this department."
+```
+
+For longer descriptions, define a doc block in the component's `docs.md`
+and reference it from `schema.yml`:
+
+```markdown
+<!-- rtl_rdp_client/models/staging/products/product_hierarchy/docs.md -->
+{% docs cust_department_manager %}
+Name of the manager responsible for this department. Sourced from the
+HR system and refreshed nightly. Used for operational reporting only —
+not exposed in BI-facing views.
+{% enddocs %}
+```
+
+```yaml
+# schema.yml
+- name: cust_department_manager
+  description: "{{ doc('cust_department_manager') }}"
+```
+
+Descriptions flow into dbt docs automatically after `dbt docs generate` —
+no changes to `rtl_rdp` files required.
+
+### What schema.yml Can Also Do
+
+Beyond column descriptions, the component's `schema.yml` supports the
+following customisations for RDP models:
+
+| What | Example use case |
+|---|---|
+| Override existing descriptions | Rephrase RDP descriptions in business terminology |
+| Add tests to existing columns | Add an `accepted_values` test specific to your data |
+| Add a model-level description | Add context about how your implementation uses the model |
+| Add tags | Tag models for internal data governance |
+| Add meta fields | Add custom metadata |
+
+### What schema.yml Cannot Do
+
+| What | Why |
+|---|---|
+| Add new columns to the SQL | Column additions require changing the staging model SQL directly |
+| Remove RDP columns | Cannot delete product-owned columns |
+| Override materialization or config | Owned by `rtl_rdp`'s `dbt_project.yml` |
+| Change test severity | Tests defined in `rtl_rdp` are owned by RDP |
+
+---
+
 ## Component Registry
 
 RDP is modular. Customers implement only the components they need

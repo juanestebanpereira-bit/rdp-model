@@ -70,8 +70,8 @@ any violations at pipeline run time.
 ## Documenting Customer Columns
 
 Any time you add a `cust_*` column to a staging model you must document it.
-Without documentation, the column will appear in the RDP data dictionary
-with no description.
+Without documentation, the column will not appear in the RDP data dictionary, 
+although it will appear in the data lineaage and in the ERD.
 
 ### Where to Add Descriptions
 

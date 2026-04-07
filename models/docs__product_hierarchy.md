@@ -1,3 +1,13 @@
+{#
+  Doc blocks for the Product Hierarchy component.
+
+  Columns like item_id, department_id, etc. are shared across many subject
+  areas (sales, inventory, purchasing, etc.). Because product hierarchy is a
+  prerequisite for all those components, their shared column docs live here
+  and are reused via {{ doc('column_name') }} in later components without
+  duplication. dbt merges all doc blocks globally by name.
+#}
+
 {% docs department_id %}
 Unique internal identifier for a department. Primary key of the
 department entity. Used as a foreign key in all tables that reference

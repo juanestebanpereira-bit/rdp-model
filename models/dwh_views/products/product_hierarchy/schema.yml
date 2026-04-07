@@ -1,14 +1,14 @@
 # =============================================================================
-# schema.yml — dwh/products/product_hierarchy
+# schema.yml — dwh_views/products/product_hierarchy
 # =============================================================================
-# Defines the canonical model for the Product Hierarchy component.
-# This file is the technical master copy of the RDP product hierarchy
-# contract. Column descriptions reference doc() blocks defined in
+# Defines PK/FK constraints for the stable public-facing views over the
+# Product Hierarchy physical dimension tables.
+# Column descriptions reference doc() blocks defined in
 # models/docs__product_hierarchy.md and models/docs__rdp_system_columns.md.
 #
 # Subject Area: Products
 # Component:    Product Hierarchy
-# Layer:        Data Warehouse (dwh)
+# Layer:        Data Warehouse Views (dwh_views)
 # Owner:        RDP Product Team
 # =============================================================================
 
@@ -17,13 +17,13 @@ version: 2
 models:
 
   # ---------------------------------------------------------------------------
-  # dim_departments
+  # vw_dim_departments
   # ---------------------------------------------------------------------------
-  - name: dim_departments
+  - name: vw_dim_departments
     description: >
-      A department is the broadest grouping in the product hierarchy.
-      Used to analyze and report merchandise performance at the
-      highest level of the product classification structure.
+      Stable public-facing view over dim_departments. Provides a consistent
+      interface to the physical dimension table, absorbing any breaking schema
+      changes before they reach downstream consumers.
     constraints:
       - type: primary_key
         columns: [department_id]
@@ -31,262 +31,177 @@ models:
     columns:
       - name: department_id
         description: "{{ doc('department_id') }}"
-        tests:
-          - not_null
-          - unique
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
-        tests:
-          - not_null
 
       - name: rdp_created_at
         description: "{{ doc('rdp_created_at') }}"
-        tests:
-          - not_null
 
       - name: rdp_updated_at
         description: "{{ doc('rdp_updated_at') }}"
-        tests:
-          - not_null
 
   # ---------------------------------------------------------------------------
-  # dim_classes
+  # vw_dim_classes
   # ---------------------------------------------------------------------------
-  - name: dim_classes
+  - name: vw_dim_classes
     description: >
-      A class is a grouping of styles within a department.
-      Used to analyze and report merchandise performance at the
-      class level across all styles and items within it.
+      Stable public-facing view over dim_classes. Provides a consistent
+      interface to the physical dimension table, absorbing any breaking schema
+      changes before they reach downstream consumers.
     constraints:
       - type: primary_key
         columns: [class_id]
+
     columns:
       - name: class_id
         description: "{{ doc('class_id') }}"
-        tests:
-          - not_null
-          - unique
 
       - name: department_id
         description: "{{ doc('department_id') }}"
         constraints:
           - type: foreign_key
-            to: ref('dim_departments')
+            to: ref('vw_dim_departments')
             to_columns: [department_id]
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
-        tests:
-          - not_null
 
       - name: class_name
         description: "{{ doc('class_name') }}"
-        tests:
-          - not_null
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
-        tests:
-          - not_null
 
       - name: rdp_created_at
         description: "{{ doc('rdp_created_at') }}"
-        tests:
-          - not_null
 
       - name: rdp_updated_at
         description: "{{ doc('rdp_updated_at') }}"
-        tests:
-          - not_null
 
   # ---------------------------------------------------------------------------
-  # dim_styles
+  # vw_dim_styles
   # ---------------------------------------------------------------------------
-  - name: dim_styles
+  - name: vw_dim_styles
     description: >
-      A style is a grouping of items within a class.
-      Used to analyze and report merchandise performance at the
-      style level across all items within it.
+      Stable public-facing view over dim_styles. Provides a consistent
+      interface to the physical dimension table, absorbing any breaking schema
+      changes before they reach downstream consumers.
     constraints:
       - type: primary_key
         columns: [style_id]
+
     columns:
       - name: style_id
         description: "{{ doc('style_id') }}"
-        tests:
-          - not_null
-          - unique
 
       - name: class_id
         description: "{{ doc('class_id') }}"
         constraints:
           - type: foreign_key
-            to: ref('dim_classes')
+            to: ref('vw_dim_classes')
             to_columns: [class_id]
-        tests:
-          - not_null
 
       - name: department_id
         description: "{{ doc('department_id') }}"
-        tests:
-          - not_null
 
       - name: style_number
         description: "{{ doc('style_number') }}"
-        tests:
-          - not_null
 
       - name: style_name
         description: "{{ doc('style_name') }}"
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
-        tests:
-          - not_null
 
       - name: class_name
         description: "{{ doc('class_name') }}"
-        tests:
-          - not_null
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
-        tests:
-          - not_null
 
       - name: rdp_created_at
         description: "{{ doc('rdp_created_at') }}"
-        tests:
-          - not_null
 
       - name: rdp_updated_at
         description: "{{ doc('rdp_updated_at') }}"
-        tests:
-          - not_null
 
   # ---------------------------------------------------------------------------
-  # dim_items
+  # vw_dim_items
   # ---------------------------------------------------------------------------
-  - name: dim_items
+  - name: vw_dim_items
     description: >
-      An item is the lowest level of the product hierarchy and the
-      primary unit of merchandise. All transactional data such as
-      sales, inventory and orders is recorded at the item level.
+      Stable public-facing view over dim_items. Provides a consistent
+      interface to the physical dimension table, absorbing any breaking schema
+      changes before they reach downstream consumers.
     constraints:
       - type: primary_key
         columns: [item_id]
+
     columns:
       - name: item_id
         description: "{{ doc('item_id') }}"
-        tests:
-          - not_null
-          - unique
 
       - name: style_id
         description: "{{ doc('style_id') }}"
         constraints:
           - type: foreign_key
-            to: ref('dim_styles')
+            to: ref('vw_dim_styles')
             to_columns: [style_id]
-        tests:
-          - not_null
 
       - name: class_id
         description: "{{ doc('class_id') }}"
-        tests:
-          - not_null
 
       - name: department_id
         description: "{{ doc('department_id') }}"
-        tests:
-          - not_null
 
       - name: item_number
         description: "{{ doc('item_number') }}"
-        tests:
-          - not_null
 
       - name: item_name
         description: "{{ doc('item_name') }}"
-        tests:
-          - not_null
 
       - name: style_number
         description: "{{ doc('style_number') }}"
-        tests:
-          - not_null
 
       - name: style_name
         description: "{{ doc('style_name') }}"
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
-        tests:
-          - not_null
 
       - name: class_name
         description: "{{ doc('class_name') }}"
-        tests:
-          - not_null
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
-        tests:
-          - not_null
 
       - name: rdp_created_at
         description: "{{ doc('rdp_created_at') }}"
-        tests:
-          - not_null
 
       - name: rdp_updated_at
         description: "{{ doc('rdp_updated_at') }}"
-        tests:
-          - not_null

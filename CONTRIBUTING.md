@@ -22,6 +22,25 @@ The two-project split is intentional: `rtl_rdp` is the product, `rtl_rdp_client`
 customer implementation. Customers install `rtl_rdp` as a dbt package and implement their own
 `rtl_rdp_client`. This means `rtl_rdp` must never import or depend on `rtl_rdp_client`.
 
+### Three separate git repositories
+
+Despite sharing a directory, `rtl_rdp`, `rtl_rdp_client`, and the root are
+**three independent git repositories**. This is intentional:
+
+- `rtl_rdp` has its own release cycle and is versioned independently as a
+  distributed dbt package — its commits must not be coupled to any customer implementation
+- `rtl_rdp_client` is a reference implementation that customers fork — it must
+  remain independent of the product repo
+- The root repo owns the shared tooling (`merge_manifests.py`) and the MkDocs site
+
+Always be explicit about which repo you are committing to:
+
+```bash
+git -C rtl_rdp status
+git -C rtl_rdp_client status
+git status          # root repo
+```
+
 ---
 
 ## Folder Conventions

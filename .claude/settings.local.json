@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dbt compile:*)"
+      "Bash(dbt compile:*)",
+      "Bash(git config:*)",
+      "Bash(git:*)"
     ]
   }
 }

@@ -9,8 +9,8 @@ the staging contract it requires.
 
 ## This Repository
 
-`rtl_rdp` is one of three git repositories in the `retail-analytics` monorepo.
-See the root `README.md` for the full picture.
+`rdp-model` is one of four RDP repositories — see
+[rdp-docs/README.md](../rdp-docs/README.md) for the full ecosystem picture.
 
 ## Key Documents
 

@@ -7,38 +7,45 @@ For customer implementation guidance, see `CONTRACT.md`.
 
 ## Project Structure
 
-This is a monorepo containing two dbt projects and a shared documentation layer:
+RDP spans four independent git repositories, siblings under `~/projects/`
+(not nested inside one another):
 
 ```
-retail-analytics/
-├── rtl_rdp/               # RDP product — published as a dbt package
-├── rtl_rdp_client/        # Customer implementation — maps source data to the RDP contract
-├── docs/                  # MkDocs site — spans both projects, lives at repo root
-├── build/                 # CI artifacts (gitignored) — merged manifests consumed by dbterd and colibri
-└── merge_manifests.py     # Merges dbt artifacts from both projects before ERD/lineage generation
+~/projects/
+├── rdp-model/       # RDP product — published as a dbt package (this repo)
+├── rdp-client/      # Customer implementation — maps source data to the RDP contract
+├── rdp-platform/    # Shared tooling — merge_manifests.py, ERD/lineage generation
+└── rdp-docs/        # Ecosystem overview, architecture decisions, glossary, principles
 ```
 
-The two-project split is intentional: `rtl_rdp` is the product, `rtl_rdp_client` is a reference
-customer implementation. Customers install `rtl_rdp` as a dbt package and implement their own
-`rtl_rdp_client`. This means `rtl_rdp` must never import or depend on `rtl_rdp_client`.
+See [rdp-docs/README.md](../rdp-docs/README.md) for the full ecosystem picture.
 
-### Three separate git repositories
+The two-project split between `rdp-model` and `rdp-client` is intentional:
+`rtl_rdp` is the product, `rtl_rdp_client` is a reference customer
+implementation. Customers install `rtl_rdp` as a dbt package and implement
+their own `rtl_rdp_client`. This means `rtl_rdp` must never import or
+depend on `rtl_rdp_client`.
 
-Despite sharing a directory, `rtl_rdp`, `rtl_rdp_client`, and the root are
-**three independent git repositories**. This is intentional:
+### Four separate git repositories
 
-- `rtl_rdp` has its own release cycle and is versioned independently as a
+`rdp-model`, `rdp-client`, `rdp-platform`, and `rdp-docs` are **four
+independent git repositories**. This is intentional:
+
+- `rdp-model` has its own release cycle and is versioned independently as a
   distributed dbt package — its commits must not be coupled to any customer implementation
-- `rtl_rdp_client` is a reference implementation that customers fork — it must
+- `rdp-client` is a reference implementation that customers fork — it must
   remain independent of the product repo
-- The root repo owns the shared tooling (`merge_manifests.py`) and the MkDocs site
+- `rdp-platform` owns the shared tooling (`merge_manifests.py`, ERD/lineage
+  generation via dbterd and colibri) used to build each customer's
+  documentation site
+- `rdp-docs` owns ecosystem-level documentation
 
 Always be explicit about which repo you are committing to:
 
 ```bash
-git -C rtl_rdp status
-git -C rtl_rdp_client status
-git status          # root repo
+git -C ../rdp-client status
+git -C ../rdp-platform status
+git status          # this repo (rdp-model)
 ```
 
 ---
@@ -108,6 +115,29 @@ single combined artifact that spans both projects. Running `dbt docs generate` i
 project separately produces two independent manifests — `merge_manifests.py` combines them
 into a single `manifest.json` and `catalog.json` in `build/` before ERD and lineage
 generation runs.
+
+---
+
+## Implementation Reference
+
+### Layer → Schema Mapping
+
+Each layer materializes into a BigQuery dataset prefixed with the target environment (`dev`, `tst`, `prd`) via the `generate_schema_name` macro:
+
+| Layer | Schema suffix | Materialization |
+|---|---|---|
+| staging | `rdp_staging` | view |
+| temp | `rdp_temp` | table |
+| dwh | `rdp_dwh` | table |
+| dwh_views | `rdp_dwh_views` | view |
+| mart | `rdp_mart` | table |
+| mart_views | `rdp_mart_views` | view |
+
+### Key Macros (`macros/`)
+
+- **`generate_schema_name.sql`** — Prefixes dataset names with the active dbt target (dev/tst/prd)
+- **`audit_columns.sql`** — Appends `rdp_created_at` and `rdp_updated_at` to all models
+- **`customer_columns.sql`** — Dynamically passes through any `cust_*` columns from staging without code changes
 
 ---
 

@@ -6,7 +6,7 @@ The table below lists every subject area, its components, and their implementati
 
 | Subject Area | Component | Status | Link |
 |---|---|---|---|
-| Products | Product Hierarchy | ✅ Available | [Overview](products/product-hierarchy/overview.md) |
+| Products | Product Hierarchy | ✅ Available | [Overview](../subject_areas/products/product_hierarchy/overview.md) |
 | Locations | — | 🔜 Coming soon | — |
 | Calendar | — | 🔜 Coming soon | — |
 | Sales | — | 🔜 Coming soon | — |

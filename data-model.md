@@ -4,7 +4,7 @@
 This document explains what the RDP canonical data model is: a single set
 of entity definitions and relationships that stays identical across every
 customer implementation. For the full catalog of subject areas and
-components, see `docs/components.md`.
+components, see the [components catalog](components.md).
 
 For naming conventions refer to `style-guide.md`.
 For customer implementation requirements refer to `contract.md`.

@@ -2,7 +2,7 @@
 ## Retail Data Platform — Entity Definitions and Relationships
 
 This document is the index for the RDP canonical data model.
-Each subject area is documented in its own file under `data_model/`.
+Each subject area's components are documented under `docs/{subject-area}/{component}/overview.md`.
 
 For naming conventions refer to `style-guide.md`.
 For customer implementation requirements refer to `contract.md`.
@@ -31,7 +31,7 @@ the full lineage from any level without joins.
 
 | Subject Area | Status | File |
 |---|---|---|
-| Products | ✅ Available | [data_model/products.md](data_model/products.md) |
+| Products | ✅ Available | [Product Hierarchy overview](../subject_areas/products/product_hierarchy/overview.md) |
 | Locations | 🔜 Coming Soon | data_model/locations.md |
 | Calendar | 🔜 Coming Soon | data_model/calendar.md |
 | Sales | 🔜 Coming Soon | data_model/sales.md |

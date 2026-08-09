@@ -11,9 +11,9 @@ depend on `rdp-client`.
 
 ## Key documents
 
-- `CONTRACT.md` — staging contract customers must implement
-- `STYLE_GUIDE.md` — SQL and dbt coding standards
-- `DATA_MODEL.md` — canonical data model index
+- `contract.md` — staging contract customers must implement
+- `style-guide.md` — SQL and dbt coding standards
+- `data-model.md` — canonical data model index
 - `docs/glossary/` — subject-area glossaries (e.g. `products.md`), assembled into customer-facing sites at build time
 - `CONTRIBUTING.md` — folder conventions, tool choices, adding a component
 

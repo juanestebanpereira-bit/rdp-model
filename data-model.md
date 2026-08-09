@@ -4,8 +4,8 @@
 This document is the index for the RDP canonical data model.
 Each subject area is documented in its own file under `data_model/`.
 
-For naming conventions refer to `STYLE_GUIDE.md`.
-For customer implementation requirements refer to `CONTRACT.md`.
+For naming conventions refer to `style-guide.md`.
+For customer implementation requirements refer to `contract.md`.
 The technical implementation lives in `models/dwh/schema.yml`.
 
 ---

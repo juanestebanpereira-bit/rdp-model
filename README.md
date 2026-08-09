@@ -14,9 +14,9 @@ the staging contract it requires.
 
 ## Key Documents
 
-- `CONTRACT.md` — staging contract customers must implement, including how to document custom columns
+- `contract.md` — staging contract customers must implement, including how to document custom columns
 - `CONTRIBUTING.md` — developer guide: folder conventions, tool choices, adding components
-- `STYLE_GUIDE.md` — SQL and dbt coding standards
+- `style-guide.md` — SQL and dbt coding standards
 
 ## Data Flow
 

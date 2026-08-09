@@ -9,7 +9,7 @@ not a reference manual.
 For full column descriptions, run `dbt docs generate` in `rtl_rdp`
 to browse the RDP data dictionary.
 
-For naming conventions and coding standards, refer to `STYLE_GUIDE.md`.
+For naming conventions and coding standards, refer to `style-guide.md`.
 
 ---
 
@@ -39,13 +39,13 @@ ownership of all downstream processing.
    Columns marked NOT NULL must never contain null values.
 
 3. **Additional columns are welcome** but must be prefixed with `cust_`.
-   See `STYLE_GUIDE.md` section 3.8 for customer column conventions.
+   See `style-guide.md` section 3.8 for customer column conventions.
 
 4. **Column names must be lowercase with underscores.**
    No camelCase, no spaces, no special characters.
 
 5. **All monetary amounts in a row must be in the same currency.**
-   See `STYLE_GUIDE.md` section 3.6 for monetary column conventions.
+   See `style-guide.md` section 3.6 for monetary column conventions.
 
 6. **Data types must match the contract specification.**
    Type mismatches will cause the RDP pipeline to fail.

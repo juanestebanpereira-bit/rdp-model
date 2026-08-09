@@ -1,7 +1,7 @@
 # Contributing to RDP
 
 This document is for developers working on the RDP platform itself.
-For customer implementation guidance, see `CONTRACT.md`.
+For customer implementation guidance, see `contract.md`.
 
 ---
 

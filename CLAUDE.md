@@ -13,8 +13,8 @@ depend on `rdp-client`.
 
 - `contract.md` — staging contract customers must implement
 - `style-guide.md` — SQL and dbt coding standards
-- `data-model.md` — canonical data model index
-- `docs/glossary/` — subject-area glossaries (e.g. `products.md`), assembled into customer-facing sites at build time
+- `data-model.md` — what the canonical data model is, conceptually
+- `docs/components.md` — catalog of subject areas and components, with implementation status
 - `CONTRIBUTING.md` — folder conventions, tool choices, adding a component
 
 ## Commands

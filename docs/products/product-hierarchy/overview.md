@@ -42,7 +42,7 @@ RDP carries parent attributes down through the hierarchy at each layer, so repor
 
 ## Missing values
 
-Missing values are NULL, always — RDP does not use sentinel strings or sentinel rows. When a child row's foreign key doesn't resolve to a parent — for example, a class with no matching department — the FK and every carried-down parent attribute are simply NULL. Reporting layers handle NULL as they see fit.
+Missing values are NULL, always — RDP does not use sentinel strings or sentinel rows. NULLs arise from two sources: when a child row's foreign key doesn't resolve to a parent — for example, a class with no matching department — the FK and every carried-down parent attribute are simply NULL; and when the source system doesn't capture a value at all — for example, an item without a recorded class — the attribute is NULL from staging onward, and NULLs propagate naturally through denormalized parent attributes. Reporting layers handle NULL as they see fit.
 
 ## Customer columns
 

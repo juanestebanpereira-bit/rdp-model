@@ -1,17 +1,17 @@
 # =============================================================================
-# dbt_project.yml — rtl_rdp (Retail Data Platform)
+# dbt_project.yml — rdp_model (Retail Data Platform)
 # =============================================================================
-# This file is the central configuration for the rtl_rdp dbt project.
+# This file is the central configuration for the rdp_model dbt project.
 # It defines project metadata, file paths, and model layer configurations.
 # Environment-specific dataset names are resolved at runtime via the
 # generate_schema_name macro, which prepends the target name (dev/tst/prd).
 # =============================================================================
 
-name: 'rtl_rdp'
+name: 'rdp_model'
 version: '1.0.0'
 
 # Profile name must match the entry in ~/.dbt/profiles.yml
-profile: 'rtl_rdp'
+profile: 'rdp_model'
 
 # =============================================================================
 # File Path Configuration
@@ -26,7 +26,7 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 # Note: doc() block .md files are intentionally placed in models/ not docs/.
 # This is required for package distribution — dbt only copies the models/
-# folder when installing rtl_rdp as a package via dbt deps. Placing .md files
+# folder when installing rdp_model as a package via dbt deps. Placing .md files
 # in docs/ would make them unavailable to downstream projects.
 # docs-paths is therefore set to models/ to match where the files actually live.
 docs-paths: ["models"]
@@ -48,14 +48,14 @@ clean-targets:
 #   → temp → dwh → dwh_views → mart → mart_views
 #
 # Access rules:
-#   - rtl_rdp reads rdp_staging via source() declarations only
+#   - rdp_model reads rdp_staging via source() declarations only
 #   - Customers query rdp_dwh_views and rdp_mart_views only
 #   - Lightdash points at rdp_mart_views only
 #   - rdp_dwh physical tables are never exposed directly
 # =============================================================================
 
 models:
-  rtl_rdp:
+  rdp_model:
 
     temp:
       # PURPOSE: Internal working tables for enrichment, joining and

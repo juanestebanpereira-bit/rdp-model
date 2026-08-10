@@ -106,18 +106,6 @@ FROM {{ source('your_landing', 'your_items_table') }}
 
 ---
 
-### Enable This Component
-```yaml
-# rdp-client/components.yml
-subject_areas:
-  products:
-    components:
-      product_hierarchy:
-        enabled: true
-```
-
----
-
 ## Version History
 
 | Version | Date | Change |

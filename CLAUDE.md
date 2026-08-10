@@ -24,8 +24,12 @@ dbt deps          # Install packages
 dbt compile       # Compile SQL without executing
 dbt run           # Run all models
 dbt test          # Run all data quality tests
-dbt docs generate # Generate documentation
+dbt docs generate # Generate manifest.json/catalog.json (NOT the customer site — see below)
 ```
+
+This alone never updates the customer site — see
+[rdp-platform/README.md](../rdp-platform/README.md), "Common commands:
+dbt model → customer site", for the full sequence.
 
 > Note: this repo's `.claude/settings.local.json` only permits `dbt compile` by default.
 

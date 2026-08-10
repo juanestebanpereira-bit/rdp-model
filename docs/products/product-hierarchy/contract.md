@@ -16,6 +16,12 @@ None — this is a foundation component with no dependencies.
 Yes — required for all RDP implementations that include any
 product-related subject areas (Sales, Inventory etc.)
 
+NULL is an acceptable value for any column marked "NULL allowed."
+However, customers should minimize NULLs where the source data
+permits — populate values wherever they can be reliably derived.
+Excessive NULLs degrade downstream reporting quality even though they
+are structurally valid.
+
 ### Staging Views Required
 
 #### stg_departments
@@ -63,9 +69,9 @@ FROM {{ source('your_landing', 'your_classes_table') }}
 | Column | Type | Nullable |
 |---|---|---|
 | `style_id` | STRING | NOT NULL |
-| `class_id` | STRING | NOT NULL |
+| `class_id` | STRING | NULL allowed |
 | `style_number` | STRING | NOT NULL |
-| `style_name` | STRING | NOT NULL |
+| `style_name` | STRING | NULL allowed |
 | `rdp_source_system` | STRING | NOT NULL |
 ```sql
 -- Minimum valid implementation

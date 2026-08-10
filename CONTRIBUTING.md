@@ -26,6 +26,11 @@ implementation. Customers install `rtl_rdp` as a dbt package and implement
 their own `rtl_rdp_client`. This means `rtl_rdp` must never import or
 depend on `rtl_rdp_client`.
 
+**Note:** `rtl_rdp`/`rtl_rdp_client` are the dbt *project* names (from
+each project's `dbt_project.yml`), used in `ref()`/`source()` and
+package installs. On disk, the repos are `rdp-model`/`rdp-client` — all
+file paths in this document use the repo names, not the project names.
+
 ### Four separate git repositories
 
 `rdp-model`, `rdp-client`, `rdp-platform`, and `rdp-docs` are **four
@@ -67,12 +72,36 @@ models/
 
 For example:
 ```
-rtl_rdp/models/dwh/products/product_hierarchy/
-rtl_rdp_client/models/staging/products/product_hierarchy/
+rdp-model/models/dwh/products/product_hierarchy/
+rdp-client/models/staging/products/product_hierarchy/
 ```
 
 All new models must follow this structure. Never place model files at the subject area level
 or above.
+
+### Documentation is organised the same way, with hyphens instead of underscores
+
+`rdp-model/docs/` mirrors the `{subject_area}/{component}/` nesting above,
+but component folder names use lowercase-with-hyphens instead of
+lowercase-with-underscores:
+
+```
+docs/
+└── {subject-area}/
+    └── {component}/
+        ├── overview.md
+        └── contract.md
+```
+
+For example: `rdp-model/docs/products/product-hierarchy/` documents
+`rdp-model/models/dwh/products/product_hierarchy/`. `rdp-platform/hooks.py`
+converts hyphens to underscores when copying these files into the
+customer site.
+
+`overview.md` and `contract.md` are written for people who can read SQL
+and understand data modeling concepts (implementation consultants, data
+modelers) — not end business users. Business-user documentation lives
+in the Cube semantic layer when a customer deploys it.
 
 ### Doc blocks follow different conventions in each project
 
@@ -83,8 +112,8 @@ dbt package constraint:
 **`rtl_rdp` (published as a package):**
 Doc block files live flat inside `models/` with a `docs__` prefix:
 ```
-rtl_rdp/models/docs__product_hierarchy.md
-rtl_rdp/models/docs__rdp_system_columns.md
+rdp-model/models/docs__product_hierarchy.md
+rdp-model/models/docs__rdp_system_columns.md
 ```
 A `docs/` subdirectory cannot be used here because dbt does not deploy subdirectory
 doc files when a project is installed as a package. The `docs__` prefix is the
@@ -93,7 +122,7 @@ established workaround to make the purpose clear.
 **`rtl_rdp_client` (not a package):**
 Doc block files are co-located with the component they belong to:
 ```
-rtl_rdp_client/models/staging/products/product_hierarchy/docs.md
+rdp-client/models/staging/products/product_hierarchy/docs.md
 ```
 This is preferred over the `docs__` workaround because `rtl_rdp_client` is never
 installed as a package, so the constraint does not apply.
@@ -143,11 +172,12 @@ Each layer materializes into a BigQuery dataset prefixed with the target environ
 
 ## Adding a New Component
 
-1. Create the component folder in both projects following the folder convention above
-2. Add staging models to `rtl_rdp_client/models/staging/{subject_area}/{component}/`
-3. Add RDP models (temp, dwh, dwh_views, mart, mart_views) to the corresponding layers in `rtl_rdp`
-4. Define constraints in `schema.yml` (not just tests) — dbterd reads constraints for the ERD
-5. Add doc blocks to `rtl_rdp/models/docs__{component}.md`
-6. Enable the component in `rtl_rdp_client/components.yml`
-7. Run `merge_manifests.py` and dbterd to regenerate ERD and lineage for the new component
-8. Add the new component to the MkDocs nav in `mkdocs.yml`
+1. Create the component folder in both projects, following the folder convention above
+2. Add staging models, a `schema.yml` (tests), and a `docs.md` (doc blocks) to `rdp-client/models/staging/{subject_area}/{component}/`
+3. Add a `sources.yml` declaring those staging views to `rdp-model/models/sources/{subject_area}/{component}/`
+4. Add RDP models (temp, dwh, dwh_views, mart, mart_views) to the corresponding layers in `rdp-model/models/`. Define constraints in each layer's `schema.yml` (not just tests) — dbterd reads constraints for the ERD
+5. Add doc blocks to `rdp-model/models/docs__{component}.md`
+6. Add `overview.md` and `contract.md` for the component to `rdp-model/docs/{subject-area}/{component}/`
+7. Add a row for the new subject area/component to `rdp-model/docs/components.md`
+8. Add the new component to the MkDocs nav in `rdp-client/mkdocs.yml`
+9. Regenerate the ERD, lineage, and customer site — see [rdp-platform/README.md](../rdp-platform/README.md), "Common commands: dbt model → customer site," for the exact command sequence

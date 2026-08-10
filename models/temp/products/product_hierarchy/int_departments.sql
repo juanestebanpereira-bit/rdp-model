@@ -33,16 +33,3 @@ SELECT
     rdp_source_system
 
 FROM source
-
-UNION ALL
-
-SELECT
-    'NOT_ASSIGNED'  AS department_id,
-    'NOT_ASSIGNED'  AS department_number,
-    'Not Assigned'  AS department_name,
-
-    {% if has_customer_columns(source('rdp_staging', 'stg_departments'), contract) %}
-        {{ sentinel_customer_columns(source('rdp_staging', 'stg_departments'), contract) }},
-    {% endif %}
-
-    'NOT_ASSIGNED'  AS rdp_source_system

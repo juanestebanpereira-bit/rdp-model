@@ -27,20 +27,20 @@ SELECT
 
     -- foreign keys
     source.style_id,
-    COALESCE(styles.class_id,          'NOT_ASSIGNED')  AS class_id,
-    COALESCE(styles.department_id,     'NOT_ASSIGNED')  AS department_id,
+    styles.class_id,
+    styles.department_id,
 
     -- attributes
     source.item_number,
     source.item_name,
 
     -- carried down from int_styles
-    COALESCE(styles.style_number,      'NOT_ASSIGNED')  AS style_number,
-    COALESCE(styles.style_name,        'NOT ASSIGNED')  AS style_name,
-    COALESCE(styles.class_number,      'NOT_ASSIGNED')  AS class_number,
-    COALESCE(styles.class_name,        'NOT ASSIGNED')  AS class_name,
-    COALESCE(styles.department_number, 'NOT_ASSIGNED')  AS department_number,
-    COALESCE(styles.department_name,   'NOT ASSIGNED')  AS department_name,
+    styles.style_number,
+    styles.style_name,
+    styles.class_number,
+    styles.class_name,
+    styles.department_number,
+    styles.department_name,
 
     -- customer columns passthrough
     {% if has_customer_columns(source('rdp_staging', 'stg_items'), contract) %}
@@ -53,25 +53,3 @@ SELECT
 FROM source
 LEFT JOIN styles
     ON source.style_id = styles.style_id
-
-UNION ALL
-
-SELECT
-    'NOT_ASSIGNED'  AS item_id,
-    'NOT_ASSIGNED'  AS style_id,
-    'NOT_ASSIGNED'  AS class_id,
-    'NOT_ASSIGNED'  AS department_id,
-    'NOT_ASSIGNED'  AS item_number,
-    'Not Assigned'  AS item_name,
-    'NOT_ASSIGNED'  AS style_number,
-    'Not Assigned'  AS style_name,
-    'NOT_ASSIGNED'  AS class_number,
-    'Not Assigned'  AS class_name,
-    'NOT_ASSIGNED'  AS department_number,
-    'Not Assigned'  AS department_name,
-
-    {% if has_customer_columns(source('rdp_staging', 'stg_items'), contract) %}
-        {{ sentinel_customer_columns(source('rdp_staging', 'stg_items'), contract) }},
-    {% endif %}
-
-    'NOT_ASSIGNED'  AS rdp_source_system

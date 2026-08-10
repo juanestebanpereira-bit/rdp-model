@@ -2,8 +2,8 @@
 -- dim_items.sql
 -- =============================================================================
 -- Dimension table for items. Reads from int_items, which already includes
--- the NOT_ASSIGNED sentinel row, style, class, and department attribute
--- carry-down, and customer column passthrough.
+-- style, class, and department attribute carry-down and customer column
+-- passthrough.
 --
 -- Component:  Product Hierarchy
 -- Owner:      RDP Product Team

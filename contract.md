@@ -39,7 +39,7 @@ ownership of all downstream processing.
    Columns marked NOT NULL must never contain null values.
 
 3. **Additional columns are welcome** but must be prefixed with `cust_`.
-   See `style-guide.md` section 3.8 for customer column conventions.
+   See `style-guide.md` section 3.7 for customer column conventions.
 
 4. **Column names must be lowercase with underscores.**
    No camelCase, no spaces, no special characters.

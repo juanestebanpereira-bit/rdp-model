@@ -23,7 +23,7 @@ the staging contract it requires.
 ```
 rtl_rdp_client: staging (stg_*)     customer-owned, maps sources to RDP contract
         ↓
-rtl_rdp: temp (int_*)               internal joins, enrichment, sentinel rows
+rtl_rdp: temp (int_*)               internal joins, enrichment
         ↓
 rtl_rdp: dwh (dim_*, fct_*)         conformed physical tables
         ↓

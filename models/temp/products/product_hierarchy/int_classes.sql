@@ -33,8 +33,8 @@ SELECT
     source.class_name,
 
     -- carried down from int_departments
-    COALESCE(departments.department_number, 'NOT_ASSIGNED')  AS department_number,
-    COALESCE(departments.department_name,   'NOT ASSIGNED')  AS department_name,
+    departments.department_number,
+    departments.department_name,
 
     -- customer columns passthrough
     {% if has_customer_columns(source('rdp_staging', 'stg_classes'), contract) %}
@@ -47,19 +47,3 @@ SELECT
 FROM source
 LEFT JOIN departments
     ON source.department_id = departments.department_id
-
-UNION ALL
-
-SELECT
-    'NOT_ASSIGNED'  AS class_id,
-    'NOT_ASSIGNED'  AS department_id,
-    'NOT_ASSIGNED'  AS class_number,
-    'Not Assigned'  AS class_name,
-    'NOT_ASSIGNED'  AS department_number,
-    'Not Assigned'  AS department_name,
-
-    {% if has_customer_columns(source('rdp_staging', 'stg_classes'), contract) %}
-        {{ sentinel_customer_columns(source('rdp_staging', 'stg_classes'), contract) }},
-    {% endif %}
-
-    'NOT_ASSIGNED'  AS rdp_source_system

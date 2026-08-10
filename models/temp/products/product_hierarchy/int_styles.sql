@@ -27,17 +27,17 @@ SELECT
 
     -- foreign keys
     source.class_id,
-    COALESCE(classes.department_id,     'NOT_ASSIGNED')  AS department_id,
+    classes.department_id,
 
     -- attributes
     source.style_number,
     source.style_name,
 
     -- carried down from int_classes
-    COALESCE(classes.class_number,      'NOT_ASSIGNED')  AS class_number,
-    COALESCE(classes.class_name,        'NOT ASSIGNED')  AS class_name,
-    COALESCE(classes.department_number, 'NOT_ASSIGNED')  AS department_number,
-    COALESCE(classes.department_name,   'NOT ASSIGNED')  AS department_name,
+    classes.class_number,
+    classes.class_name,
+    classes.department_number,
+    classes.department_name,
 
     -- customer columns passthrough
     {% if has_customer_columns(source('rdp_staging', 'stg_styles'), contract) %}
@@ -50,22 +50,3 @@ SELECT
 FROM source
 LEFT JOIN classes
     ON source.class_id = classes.class_id
-
-UNION ALL
-
-SELECT
-    'NOT_ASSIGNED'  AS style_id,
-    'NOT_ASSIGNED'  AS class_id,
-    'NOT_ASSIGNED'  AS department_id,
-    'NOT_ASSIGNED'  AS style_number,
-    'Not Assigned'  AS style_name,
-    'NOT_ASSIGNED'  AS class_number,
-    'Not Assigned'  AS class_name,
-    'NOT_ASSIGNED'  AS department_number,
-    'Not Assigned'  AS department_name,
-
-    {% if has_customer_columns(source('rdp_staging', 'stg_styles'), contract) %}
-        {{ sentinel_customer_columns(source('rdp_staging', 'stg_styles'), contract) }},
-    {% endif %}
-
-    'NOT_ASSIGNED'  AS rdp_source_system

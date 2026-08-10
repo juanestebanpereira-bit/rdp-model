@@ -32,7 +32,7 @@ Each level is a one-to-many parent of the level below it: one department has man
 Product Hierarchy follows RDP's standard layering:
 
 1. **Staging** (`stg_*`, customer-owned, in `rdp-client`) — raw source data mapped to the RDP contract.
-2. **Temp** (`int_*`, this component) — joins each staging entity to its parent, carries down parent attributes, and appends a `NOT_ASSIGNED` sentinel row.
+2. **Temp** (`int_*`, this component) — joins each staging entity to its parent and carries down parent attributes.
 3. **Dwh** (`dim_*`, this component) — the physical dimension tables. Read directly from the `int_*` models and add audit columns (`rdp_created_at`, `rdp_updated_at`).
 4. **Dwh views** (`vw_dim_*`, this component) — a stable public interface over the `dim_*` tables, absorbing any breaking schema changes before they reach downstream consumers.
 
@@ -40,13 +40,13 @@ Product Hierarchy follows RDP's standard layering:
 
 RDP carries parent attributes down through the hierarchy at each layer, so reporting tools can query any level without joins. For example, `dim_items` includes not just `item_id` and `item_name`, but also `style_number`, `style_name`, `class_number`, `class_name`, `department_number`, and `department_name` — the full ancestry, denormalized onto every item row.
 
-## Referential integrity: the NOT_ASSIGNED sentinel
+## Missing values
 
-Every entity's `int_*` model appends a single `NOT_ASSIGNED` sentinel row — RDP's standard "Sentinel Value" pattern for preserving referential integrity. When a child row's foreign key doesn't resolve to a parent — for example, a class with no matching department — the carried-down parent attributes fall back to `NOT_ASSIGNED` (codes) or `Not Assigned` (names) via `COALESCE`, rather than nulling out the row or dropping it. This keeps every fact row joinable to a dimension row, even when source data is incomplete.
+Missing values are NULL, always — RDP does not use sentinel strings or sentinel rows. When a child row's foreign key doesn't resolve to a parent — for example, a class with no matching department — the FK and every carried-down parent attribute are simply NULL. Reporting layers handle NULL as they see fit.
 
 ## Customer columns
 
-Customers may add `cust_*` columns to any staging view; they pass through automatically at the temp layer via the `customer_columns` macro, and receive a matching sentinel value in the `NOT_ASSIGNED` row via `sentinel_customer_columns`. See [contract.md](contract.md) for the full staging contract, including how to document custom columns.
+Customers may add `cust_*` columns to any staging view; they pass through automatically at the temp layer via the `customer_columns` macro. See [contract.md](contract.md) for the full staging contract, including how to document custom columns.
 
 ## Related documentation
 

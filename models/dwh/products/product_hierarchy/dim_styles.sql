@@ -2,8 +2,7 @@
 -- dim_styles.sql
 -- =============================================================================
 -- Dimension table for styles. Reads from int_styles, which already includes
--- the NOT_ASSIGNED sentinel row, class and department attribute carry-down,
--- and customer column passthrough.
+-- class and department attribute carry-down and customer column passthrough.
 --
 -- Component:  Product Hierarchy
 -- Owner:      RDP Product Team

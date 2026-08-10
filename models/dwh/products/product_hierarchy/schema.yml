@@ -84,8 +84,6 @@ models:
           - type: foreign_key
             to: ref('dim_departments')
             to_columns: [department_id]
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
@@ -99,13 +97,9 @@ models:
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
@@ -146,13 +140,9 @@ models:
           - type: foreign_key
             to: ref('dim_classes')
             to_columns: [class_id]
-        tests:
-          - not_null
 
       - name: department_id
         description: "{{ doc('department_id') }}"
-        tests:
-          - not_null
 
       - name: style_number
         description: "{{ doc('style_number') }}"
@@ -161,28 +151,18 @@ models:
 
       - name: style_name
         description: "{{ doc('style_name') }}"
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
-        tests:
-          - not_null
 
       - name: class_name
         description: "{{ doc('class_name') }}"
-        tests:
-          - not_null
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"
@@ -223,18 +203,12 @@ models:
           - type: foreign_key
             to: ref('dim_styles')
             to_columns: [style_id]
-        tests:
-          - not_null
 
       - name: class_id
         description: "{{ doc('class_id') }}"
-        tests:
-          - not_null
 
       - name: department_id
         description: "{{ doc('department_id') }}"
-        tests:
-          - not_null
 
       - name: item_number
         description: "{{ doc('item_number') }}"
@@ -248,33 +222,21 @@ models:
 
       - name: style_number
         description: "{{ doc('style_number') }}"
-        tests:
-          - not_null
 
       - name: style_name
         description: "{{ doc('style_name') }}"
-        tests:
-          - not_null
 
       - name: class_number
         description: "{{ doc('class_number') }}"
-        tests:
-          - not_null
 
       - name: class_name
         description: "{{ doc('class_name') }}"
-        tests:
-          - not_null
 
       - name: department_number
         description: "{{ doc('department_number') }}"
-        tests:
-          - not_null
 
       - name: department_name
         description: "{{ doc('department_name') }}"
-        tests:
-          - not_null
 
       - name: rdp_source_system
         description: "{{ doc('rdp_source_system') }}"

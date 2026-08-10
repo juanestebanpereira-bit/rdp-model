@@ -108,7 +108,7 @@ FROM {{ source('your_landing', 'your_items_table') }}
 
 ### Enable This Component
 ```yaml
-# rtl_rdp_client/components.yml
+# rdp-client/components.yml
 subject_areas:
   products:
     components:

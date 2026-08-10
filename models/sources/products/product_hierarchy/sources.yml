@@ -2,13 +2,13 @@
 # sources.yml — sources/products/product_hierarchy
 # =============================================================================
 # Declares the staging views consumed by the Product Hierarchy component.
-# These views are defined and maintained in rtl_rdp_client and must
-# satisfy the RDP staging contract defined in contract/products.md.
+# These views are defined and maintained in rdp_client and must
+# satisfy the RDP staging contract defined in contract.md.
 #
 # Subject Area: Products
 # Component:    Product Hierarchy
 # Owner:        RDP Product Team
-# Reads from:   dev_rdp_staging (maintained by rtl_rdp_client)
+# Reads from:   dev_rdp_staging (maintained by rdp_client)
 # =============================================================================
 
 version: 2

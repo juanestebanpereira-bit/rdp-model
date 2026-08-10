@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## What this repo is
 
-`rdp-model` (dbt project name `rtl_rdp`) is the RDP product — the canonical
+`rdp-model` (dbt project name `rdp_model`) is the RDP product — the canonical
 data model, transformations, and BI-facing views. It is published as a dbt
 package and installed by customers via `dbt deps`. It must never import or
 depend on `rdp-client`.

@@ -1,5 +1,5 @@
 -- =============================================================================
--- generate_schema_name.sql — rtl_rdp (Retail Data Platform)
+-- generate_schema_name.sql — rdp_model (Retail Data Platform)
 -- =============================================================================
 -- Overrides dbt's default schema naming behavior to prepend the environment
 -- prefix (dev/tst/prd) to all dataset names. This ensures models land in

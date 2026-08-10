@@ -1,10 +1,10 @@
-# rtl_rdp — Retail Data Platform Product
+# rdp_model — Retail Data Platform Product
 
 This is the RDP product dbt project. It defines the canonical data model,
 transformations, and BI-facing views for the Retail Data Platform.
 
-`rtl_rdp` is distributed to customers as a dbt package. Customers install
-it via `dbt deps` in their own `rtl_rdp_client` project and implement
+`rdp_model` is distributed to customers as a dbt package. Customers install
+it via `dbt deps` in their own `rdp_client` project and implement
 the staging contract it requires.
 
 ## This Repository
@@ -21,17 +21,17 @@ the staging contract it requires.
 ## Data Flow
 
 ```
-rtl_rdp_client: staging (stg_*)     customer-owned, maps sources to RDP contract
+rdp_client: staging (stg_*)         customer-owned, maps sources to RDP contract
         ↓
-rtl_rdp: temp (int_*)               internal joins, enrichment
+rdp_model: temp (int_*)              internal joins, enrichment
         ↓
-rtl_rdp: dwh (dim_*, fct_*)         conformed physical tables
+rdp_model: dwh (dim_*, fct_*)        conformed physical tables
         ↓
-rtl_rdp: dwh_views (vw_dim_*, vw_fct_*)   stable public interface
+rdp_model: dwh_views (vw_dim_*, vw_fct_*)   stable public interface
         ↓
-rtl_rdp: mart (mart_*)              subject-area aggregations
+rdp_model: mart (mart_*)             subject-area aggregations
         ↓
-rtl_rdp: mart_views (vw_mart_*)     BI-facing layer (Lightdash)
+rdp_model: mart_views (vw_mart_*)    BI-facing layer (Lightdash)
 ```
 
 ## Folder structure
@@ -43,7 +43,7 @@ dictionary) comes from, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Common Commands
 
-Run from within this directory (`rtl_rdp/`):
+Run from within this directory (`rdp-model/`):
 
 ```bash
 dbt deps          # Install packages

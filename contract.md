@@ -2,11 +2,11 @@
 ## Retail Data Platform — Customer Staging Requirements
 
 This document defines what the customer must implement in the
-`rtl_rdp_client` dbt project for the RDP pipeline to function.
+`rdp_client` dbt project for the RDP pipeline to function.
 It is intentionally concise — a checklist for implementation,
 not a reference manual.
 
-For full column descriptions, run `dbt docs generate` in `rtl_rdp`
+For full column descriptions, run `dbt docs generate` in `rdp_model`
 to browse the RDP data dictionary.
 
 For naming conventions and coding standards, refer to `style-guide.md`.
@@ -17,9 +17,9 @@ For naming conventions and coding standards, refer to `style-guide.md`.
 ```
 Customer source data (landing)
         ↓
-Customer implements staging views (rtl_rdp_client)
+Customer implements staging views (rdp_client)
         ↓  must satisfy this contract
-RDP product reads staging views (rtl_rdp)
+RDP product reads staging views (rdp_model)
         ↓
 RDP warehouse, mart, and BI layers
 ```
@@ -58,7 +58,7 @@ Any column name defined in the RDP canonical model is automatically
 reserved. Customers must not use reserved names for custom columns
 even with the `cust_` prefix.
 
-The canonical model is defined in `rtl_rdp/models/dwh/schema.yml`.
+The canonical model is defined in `rdp-model/models/dwh/schema.yml`.
 That file is the authoritative source of all reserved names — if a
 column appears there, it is reserved.
 
@@ -79,7 +79,7 @@ Short descriptions belong directly in the component's `schema.yml`, inline
 with the column definition:
 
 ```yaml
-# rtl_rdp_client/models/staging/products/product_hierarchy/schema.yml
+# rdp-client/models/staging/products/product_hierarchy/schema.yml
 models:
   - name: stg_departments
     columns:
@@ -91,7 +91,7 @@ For longer descriptions, define a doc block in the component's `docs.md`
 and reference it from `schema.yml`:
 
 ```markdown
-<!-- rtl_rdp_client/models/staging/products/product_hierarchy/docs.md -->
+<!-- rdp-client/models/staging/products/product_hierarchy/docs.md -->
 {% docs cust_department_manager %}
 Name of the manager responsible for this department. Sourced from the
 HR system and refreshed nightly. Used for operational reporting only —
@@ -106,7 +106,7 @@ not exposed in BI-facing views.
 ```
 
 Descriptions flow into dbt docs automatically after `dbt docs generate` —
-no changes to `rtl_rdp` files required.
+no changes to `rdp_model` files required.
 
 ### What schema.yml Can Also Do
 
@@ -127,8 +127,8 @@ following customisations for RDP models:
 |---|---|
 | Add new columns to the SQL | Column additions require changing the staging model SQL directly |
 | Remove RDP columns | Cannot delete product-owned columns |
-| Override materialization or config | Owned by `rtl_rdp`'s `dbt_project.yml` |
-| Change test severity | Tests defined in `rtl_rdp` are owned by RDP |
+| Override materialization or config | Owned by `rdp_model`'s `dbt_project.yml` |
+| Change test severity | Tests defined in `rdp_model` are owned by RDP |
 
 ---
 
@@ -140,7 +140,7 @@ must be explicitly enabled.
 
 ### How to Enable Components
 
-Edit `components.yml` in your `rtl_rdp_client` project and set
+Edit `components.yml` in your `rdp_client` project and set
 `enabled: true` for each component you have implemented:
 ```yaml
 subject_areas:

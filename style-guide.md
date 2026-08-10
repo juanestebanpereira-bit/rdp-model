@@ -3,7 +3,7 @@
 
 This style guide defines naming conventions and coding standards for the
 Retail Data Platform (RDP). It applies to all models, columns, tests, and
-documentation across both the `rtl_rdp` and `rtl_rdp_client` dbt projects.
+documentation across both the `rdp_model` and `rdp_client` dbt projects.
 
 This guide is informed by the official dbt Labs style guide:
 https://docs.getdbt.com/best-practices/how-we-style/1-how-we-style-our-dbt-models
@@ -443,7 +443,7 @@ SELECT
 
 ## 7. Documentation
 
-- Column descriptions use `{{ doc() }}` blocks defined in `rtl_rdp/docs/`
+- Column descriptions use `{{ doc() }}` blocks defined in `rdp-model/models/docs__*.md`
 - `doc()` blocks are defined at the canonical column name level
 - The same `doc()` block is reused across all tables where the column appears
 - Layer-specific context may be appended after the `doc()` reference

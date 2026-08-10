@@ -138,18 +138,6 @@ RDP is modular. Customers implement only the components they need
 and expand over time. All components are disabled by default and
 must be explicitly enabled.
 
-### How to Enable Components
-
-Edit `components.yml` in your `rdp_client` project and set
-`enabled: true` for each component you have implemented:
-```yaml
-subject_areas:
-  products:
-    components:
-      product_hierarchy:
-        enabled: true    # ← flip to true once implemented
-```
-
 ### Component Dependencies
 
 Some components depend on others and cannot be enabled independently.

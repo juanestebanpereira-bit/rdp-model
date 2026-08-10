@@ -458,4 +458,4 @@ environments this raises a warning. In production it raises an error.
 
 Reserved column names — names used by RDP canonical models — must never
 be used for customer columns even with the `cust_` prefix.
-A full list of reserved column names is maintained in `contract.md`.
+A full list of reserved column names is maintained in `implementation-guide.md`.

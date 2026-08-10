@@ -11,7 +11,7 @@ depend on `rdp-client`.
 
 ## Key documents
 
-- `contract.md` — staging contract customers must implement
+- `implementation-guide.md` — staging contract customers must implement
 - `style-guide.md` — SQL and dbt coding standards
 - `data-model.md` — what the canonical data model is, conceptually
 - `docs/components.md` — catalog of subject areas and components, with implementation status

@@ -2,7 +2,7 @@
 ## Retail Data Platform — Products Staging Contract
 
 This file defines the staging contract for the Products subject area.
-For the full contract index refer to `contract.md`.
+For the full contract index refer to `implementation-guide.md`.
 For entity definitions refer to `data_model/products.md`.
 
 ---

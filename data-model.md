@@ -7,7 +7,7 @@ customer implementation. For the full catalog of subject areas and
 components, see the [components catalog](components.md).
 
 For naming conventions refer to `style-guide.md`.
-For customer implementation requirements refer to `contract.md`.
+For customer implementation requirements refer to `implementation-guide.md`.
 The technical implementation lives in `models/dwh/schema.yml`.
 
 ---

@@ -1,5 +1,5 @@
-# RDP Staging Contract
-## Retail Data Platform — Customer Staging Requirements
+# RDP Implementation Guide
+## Retail Data Platform — Customer Implementation Guide
 
 This document defines what the customer must implement in the
 `rdp_client` dbt project for the RDP pipeline to function.
@@ -27,6 +27,10 @@ RDP warehouse, mart, and BI layers
 The staging layer is the only place where customer source data meets
 RDP product code. Once data passes through staging, RDP takes full
 ownership of all downstream processing.
+
+Implementation happens one component at a time — a component is
+RDP's smallest implementation unit. Enable and implement components
+individually; the rules and contracts below apply to every component.
 
 ---
 
@@ -132,82 +136,12 @@ following customisations for RDP models:
 
 ---
 
-## Component Registry
-
-RDP is modular. Customers implement only the components they need
-and expand over time. All components are disabled by default and
-must be explicitly enabled.
-
-### Component Dependencies
-
-Some components depend on others and cannot be enabled independently.
-Dependencies are listed in each component's contract section below.
-The RDP pipeline will fail at startup if a dependency is not satisfied.
-
-### Available Components
-
-Components are organized by subject area. Each subject area section
-below lists its components, their dependencies, and the staging views
-they require.
-
 ## Staging Contracts by Entity
 
-Each section below defines one required staging view. The customer
-must implement all views for the entities they wish to use.
-
----
-
-### Products
-
-**View name:** `stg_products`
-**Grain:** One row per product
-**Dataset:** `{env}_rdp_staging`
-
-#### Required Columns
-
-| Column | Type | Nullable |
-|---|---|---|
-| `product_id` | STRING | NOT NULL |
-| `product_category_name` | STRING | NULL |
-| `product_description_length` | INTEGER | NULL |
-
-#### Notes
-- Additional columns welcome with `cust_` prefix
-- Full column descriptions available in RDP data dictionary
-
-#### Minimum Valid Implementation
-```sql
-SELECT
-    your_item_code      AS product_id,
-    your_category       AS product_category_name,
-    your_desc_length    AS product_description_length
-FROM {{ source('your_landing', 'your_products_table') }}
-```
-
-#### Example With Customer Columns
-```sql
-SELECT
-    your_item_code      AS product_id,
-    your_category       AS product_category_name,
-    your_desc_length    AS product_description_length,
-    your_cost           AS cust_product_cost,
-    your_supplier       AS cust_product_supplier_name
-FROM {{ source('your_landing', 'your_products_table') }}
-```
-
----
-
-## Coming Soon
-
-Staging contracts for the following entities will be added as
-the RDP canonical model is extended:
-
-- Customers
-- Orders
-- Order Items
-- Sellers
-- Payments
-- Reviews
+Staging contracts are defined per subject area and component, not
+here — see each component's `contract.md` (for example,
+`docs/products/product-hierarchy/contract.md`), or the full catalog
+in `components.md`.
 
 ---
 
